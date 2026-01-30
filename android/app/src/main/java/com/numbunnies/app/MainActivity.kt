@@ -1,4 +1,4 @@
-package com.hongminhhaidang
+package com.numbunnies.app
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

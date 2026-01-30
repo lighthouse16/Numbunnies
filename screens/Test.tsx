@@ -24,7 +24,7 @@ export default function Test() {
   const [lastTouchItem, setLastTouchItem] = useState<{ id: string, type: string }>({ id: '', type: '' });
   const [lastTouchData, setLastTouchData] = useState<{ id: string; navigateTo: string; process: number; length: number; title: string; data: any }>();
 
-  const CATEGORY_LIST = ['Tất cả', 'Mới', 'Chưa hoàn thành', 'Đã hoàn thành'];
+  const CATEGORY_LIST = ['All', 'New', 'Incomplete', 'Completed'];
 
   useEffect(() => {
     const unsub = navigation.addListener('focus', () => { fetchInitialData(setCardTitleData, setLastTouchItem) });
@@ -70,7 +70,7 @@ export default function Test() {
 
   const RenderLibChooseSection = useMemo(() => (
     <CLASS.ViewCol style={[styles.positionSticky, styles.top0, styles.gap4vw]}>
-      <CTEXT.NGT_Inter_DispMd_SemiBold>Quỹ câu hỏi</CTEXT.NGT_Inter_DispMd_SemiBold>
+      <CTEXT.NGT_Inter_DispMd_SemiBold>Question Bank</CTEXT.NGT_Inter_DispMd_SemiBold>
       <FlatList
         scrollEnabled={false}
         style={[styles.w100, componentStyleList.roundBorderGray200 as any, styles.padding1vw]}
@@ -115,7 +115,7 @@ export default function Test() {
               switch (item) {
                 case 'Mới':
                   return filterByStatus(0);
-                case 'Chưa hoàn thành':
+                case 'Incomplete':
                   return filterByStatus(1);
                 case 'Đã hoàn thành':
                   return filterByStatus(2);
@@ -128,11 +128,11 @@ export default function Test() {
             selfRunFilterFnc
             renderFnc={(item: Array<ChapterTitleFormat | QuizFormat | FillInTheBlankFormat>) => (
               item.length > 0 ? <CLASS.ChapterCartRenderWithColorScheme data={item} navigation={navigation} />
-                : <CTEXT.NGT_Inter_HeaderMd_SemiBold>Không có thẻ nào phù hợp</CTEXT.NGT_Inter_HeaderMd_SemiBold>
+                : <CTEXT.NGT_Inter_HeaderMd_SemiBold>No matching cards</CTEXT.NGT_Inter_HeaderMd_SemiBold>
             )}
           />
         ) : (
-          <CTEXT.NGT_Inter_HeaderMd_SemiBold>Tải dữ liệu lỗi hoặc không có dữ liệu</CTEXT.NGT_Inter_HeaderMd_SemiBold>
+          <CTEXT.NGT_Inter_HeaderMd_SemiBold>Data loading error or no data available</CTEXT.NGT_Inter_HeaderMd_SemiBold>
         )}
         {marginBottomForScrollView()}
       </ScrollView>

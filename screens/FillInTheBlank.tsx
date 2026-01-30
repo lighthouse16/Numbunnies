@@ -1,6 +1,7 @@
 import { View, Text, Animated, ScrollView, TouchableOpacity, Platform, Image, ImageStyle, FlatList, ImageSourcePropType, TextInput, Alert } from 'react-native'
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next';
 import { storageGetItem, storageGetList, storageSaveAndOverwrite } from '../data/storageFunc'
 import styles, { vh, vw } from '../assets/stylesheet'
 import clrStyle, { componentStyleList, NGHIASTYLE } from '../assets/componentStyleSheet'
@@ -17,6 +18,7 @@ import { useInitializeQuizData, useSaveQuizDataBeforeLeave } from '../assets/reU
 export default function FillInTheBlank({ route }: any) {
     // Sentinal variable <<<<<<<<<<<<<<
     const navigation = useNavigation()
+    const { t } = useTranslation();
     const [CurrentCache, dispatch] = useContext(RootContext)
     let COLORSCHEME = CurrentCache.colorScheme
 
@@ -44,7 +46,7 @@ export default function FillInTheBlank({ route }: any) {
                 rightItemIcon={SVG.bunnybookmark(vw(6), vw(6), COLORSCHEME.gray1)}
                 centerChildren={
                     <CLASS.ViewColCenter>
-                        <CTEXT.NGT_Inter_DispMd_SemiBold children={`Điền vào chỗ trống`} />
+                        <CTEXT.NGT_Inter_DispMd_SemiBold children={t('fillInTheBlank.title')} />
                         <CTEXT.NGT_Inter_BodyLg_SemiBold children={quizData?.label.chapterTitle || subTitle} color={COLORSCHEME.gray1} />
                     </CLASS.ViewColCenter>
                 }
@@ -53,13 +55,13 @@ export default function FillInTheBlank({ route }: any) {
                 {point && isDone ?
                     <CLASS.ViewColCenter style={[styles.gap2vw]}>
                         <CLASS.ProgressRowWithColorScheme length={quizData?.ques.length || 1} currentIndex={currentIndex} activeValue={point} activeColor={NGHIASTYLE.NghiaSuccess800 as string} inactiveColor={NGHIASTYLE.NghiaError700 as string} />
-                        <CTEXT.NGT_Inter_HeaderLg_Bld children={`Kết quả của bạn: ${point.reduce((a, b) => a + b, 0)} / ${quizData?.ques.length}`} color={COLORSCHEME.brandMain} />
+                        <CTEXT.NGT_Inter_HeaderLg_Bld children={`${t('fillInTheBlank.result')}: ${point.reduce((a, b) => a + b, 0)} / ${quizData?.ques.length}`} color={COLORSCHEME.brandMain} />
                     </CLASS.ViewColCenter>
                     : <CLASS.ProgressRowWithColorScheme length={quizData?.ques.length || 1} currentIndex={currentIndex} />
                 }
             </View>
             <ScrollView style={[styles.flex1, styles.flexCol, styles.paddingH4vw]} contentContainerStyle={[styles.gap4vw]}>
-                <CTEXT.NGT_Inter_HeaderLg_Bld children={`Câu ${currentIndex + 1}`} color={COLORSCHEME.gray1} />
+                <CTEXT.NGT_Inter_HeaderLg_Bld children={`${t('fillInTheBlank.question')} ${currentIndex + 1}`} color={COLORSCHEME.gray1} />
                 <View style={[componentStyleList.roundFillBrand100 as any, { borderColor: NGHIASTYLE.NghiaBrand800, borderWidth: 4 }]}>
                     {
                         typeof quizData?.ques[currentIndex] === 'string' && !quizData?.ques[currentIndex].includes('asset') ?
@@ -79,13 +81,13 @@ export default function FillInTheBlank({ route }: any) {
                         });
                     }}
                     style={[componentStyleList.roundBorderGray200 as any, styles.textCenter, { color: COLORSCHEME.text }, isDone ? { borderWidth: 3, borderColor: currentChoice?.[currentIndex] === quizData?.ans[currentIndex] ? NGHIASTYLE.NghiaSuccess500 : NGHIASTYLE.NghiaError500 } : { borderColor: NGHIASTYLE.NghiaWarning500, borderWidth: 2 }]}
-                    placeholder={`Đáp án của bạn`}
+                    placeholder={t('fillInTheBlank.yourAnswer')}
                     autoFocus
                 />
                 {
                     isDone && (
                         <>
-                            <CTEXT.NGT_Inter_HeaderLg_Bld children={`Đáp án`} color={COLORSCHEME.gray1} />
+                            <CTEXT.NGT_Inter_HeaderLg_Bld children={t('fillInTheBlank.answer')} color={COLORSCHEME.gray1} />
                             {
                                 typeof quizData?.ques[currentIndex] === 'string' && !quizData?.ques[currentIndex].includes('asset') ?
                                     <CTEXT.NGT_Inter_HeaderMd_Med style={[styles.textCenter]} children={quizData?.ans[currentIndex] || ''} />
@@ -99,7 +101,7 @@ export default function FillInTheBlank({ route }: any) {
             </ScrollView>
             <View style={[styles.marginBottom2vw]}>
                 {isDone ?
-                    <CLASS.LowBtn title='Trở về' onPress={() => { navigation.goBack() }} bgColor={NGHIASTYLE.NghiaBrand800 as string} fontColor='white' FontElement={CTEXT.NGT_Inter_HeaderLg_Bld} CustomStyle={[styles.marginVertical2vw, styles.paddingV2vw]} /> :
+                    <CLASS.LowBtn title={t('common.back')} onPress={() => { navigation.goBack() }} bgColor={NGHIASTYLE.NghiaBrand800 as string} fontColor='white' FontElement={CTEXT.NGT_Inter_HeaderLg_Bld} CustomStyle={[styles.marginVertical2vw, styles.paddingV2vw]} /> :
                     null
                 }
                 <CLASS.NavigationButtonRowWithColorScheme
@@ -107,17 +109,17 @@ export default function FillInTheBlank({ route }: any) {
                     setCurrentIndex={setCurrentIndex}
                     navigation={navigation}
                     LENGTH={quizData?.ques?.length || 1}
-                    displayType='Thẻ'
+                    displayType={t('flashcard.card')}
                     onSubmit={() => {
                         if (isDone === true) {
-                            Alert.alert('Bạn có muốn thực hiện lại bài kiểm tra không?', '', [
+                            Alert.alert(t('fillInTheBlank.retakeQuestion'), t('fillInTheBlank.retakeTitle'), [
                                 {
-                                    text: 'Trở về',
+                                    text: t('common.back'),
                                     onPress: () => { navigation.goBack() },
                                     style: 'destructive',
                                 },
                                 {
-                                    text: 'Có',
+                                    text: t('common.yes'),
                                     onPress: () => {
                                         setIsDone(false)
                                         setCurrentIndex(0)

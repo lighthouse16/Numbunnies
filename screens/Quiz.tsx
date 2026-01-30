@@ -1,6 +1,7 @@
 import { View, Text, Animated, ScrollView, TouchableOpacity, Platform, Image, ImageStyle, FlatList, ImageSourcePropType, Alert } from 'react-native'
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next';
 import { storageGetItem, storageGetList, storageSaveAndOverwrite } from '../data/storageFunc'
 import styles, { vh, vw } from '../assets/stylesheet'
 import clrStyle, { componentStyleList, NGHIASTYLE } from '../assets/componentStyleSheet'
@@ -17,6 +18,7 @@ import { useInitializeQuizData, useSaveQuizDataBeforeLeave } from '../assets/reU
 export default function Quiz({ route }: any) {
     // Sentinal variable <<<<<<<<<<<<<<
     const navigation = useNavigation()
+    const { t } = useTranslation();
     const [CurrentCache, dispatch] = useContext(RootContext)
     let COLORSCHEME = CurrentCache.colorScheme
 
@@ -43,7 +45,7 @@ export default function Quiz({ route }: any) {
                 rightItemIcon={SVG.bunnybookmark(vw(6), vw(6), COLORSCHEME.gray1)}
                 centerChildren={
                     <CLASS.ViewColCenter>
-                        <CTEXT.NGT_Inter_DispMd_SemiBold children={`Chọn câu trả lời đúng`} />
+                        <CTEXT.NGT_Inter_DispMd_SemiBold children={t('quiz.title')} />
                         <CTEXT.NGT_Inter_BodyLg_SemiBold children={quizData?.label.chapterTitle || subTitle} color={COLORSCHEME.gray1} />
                     </CLASS.ViewColCenter>
                 }
@@ -52,13 +54,13 @@ export default function Quiz({ route }: any) {
                 {point && isDone ?
                     <CLASS.ViewColCenter style={[styles.gap2vw]}>
                         <CLASS.ProgressRowWithColorScheme length={quizData?.data.ques.length || 1} currentIndex={currentIndex} activeValue={point} activeColor={NGHIASTYLE.NghiaSuccess800 as string} inactiveColor={NGHIASTYLE.NghiaError700 as string} answerArray={quizData?.data.rightAns} />
-                        <CTEXT.NGT_Inter_HeaderLg_Bld children={`Kết quả của bạn: ${point.reduce((a, b) => a + b, 0)} / ${quizData?.data.ques.length}`} color={COLORSCHEME.brandMain} />
+                        <CTEXT.NGT_Inter_HeaderLg_Bld children={`${t('quiz.result')}: ${point.reduce((a, b) => a + b, 0)} / ${quizData?.data.ques.length}`} color={COLORSCHEME.brandMain} />
                     </CLASS.ViewColCenter>
                     : <CLASS.ProgressRowWithColorScheme length={quizData?.data.ques.length || 1} currentIndex={currentIndex} />
                 }
             </View>
             <ScrollView style={[styles.flex1, styles.flexCol, styles.paddingH4vw]} contentContainerStyle={[styles.gap4vw]}>
-                <CTEXT.NGT_Inter_HeaderLg_Bld children={`Câu ${currentIndex + 1}`} color={COLORSCHEME.gray1} />
+                <CTEXT.NGT_Inter_HeaderLg_Bld children={`${t('quiz.question')} ${currentIndex + 1}`} color={COLORSCHEME.gray1} />
                 <View style={[componentStyleList.roundFillBrand100 as any, { borderColor: NGHIASTYLE.NghiaBrand800, borderWidth: 4 }]}>
                     {
                         typeof quizData?.data.ques[currentIndex] === 'string' && !quizData?.data.ques[currentIndex].includes('asset') ?
@@ -98,7 +100,7 @@ export default function Quiz({ route }: any) {
             </ScrollView>
             <View style={[styles.marginBottom2vw]}>
                 {isDone ?
-                    <CLASS.LowBtn title='Trở về' onPress={() => { navigation.goBack() }} bgColor={NGHIASTYLE.NghiaBrand800 as string} fontColor='white' FontElement={CTEXT.NGT_Inter_HeaderLg_Bld} CustomStyle={[styles.marginVertical2vw, styles.paddingV2vw]} /> :
+                    <CLASS.LowBtn title={t('common.back')} onPress={() => { navigation.goBack() }} bgColor={NGHIASTYLE.NghiaBrand800 as string} fontColor='white' FontElement={CTEXT.NGT_Inter_HeaderLg_Bld} CustomStyle={[styles.marginVertical2vw, styles.paddingV2vw]} /> :
                     null
                 }
                 <CLASS.NavigationButtonRowWithColorScheme
@@ -106,17 +108,17 @@ export default function Quiz({ route }: any) {
                     setCurrentIndex={setCurrentIndex}
                     navigation={navigation}
                     LENGTH={quizData?.data.ques?.length || 1}
-                    displayType='Thẻ'
+                    displayType={t('flashcard.card')}
                     onSubmit={() => {
                         if (isDone === true) {
-                            Alert.alert('Bạn có muốn thực hiện lại bài kiểm tra không?', '', [
+                            Alert.alert(t('quiz.retakeQuestion'), t('quiz.retakeTitle'), [
                                 {
-                                    text: 'Trở về',
+                                    text: t('common.back'),
                                     onPress: () => { navigation.goBack() },
                                     style: 'destructive',
                                 },
                                 {
-                                    text: 'Có',
+                                    text: t('common.yes'),
                                     onPress: () => {
                                         setIsDone(false)
                                         setCurrentIndex(0)

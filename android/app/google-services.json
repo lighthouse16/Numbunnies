@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "702765352691",
+    "project_id": "numbunnies",
+    "storage_bucket": "numbunnies.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702765352691:android:8728bb56a19911d3635986",
+        "android_client_info": {
+          "package_name": "com.numbunnies.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKNYZpkefw-fJsRRnducKnVC1pPfyOfI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

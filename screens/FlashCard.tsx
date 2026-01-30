@@ -1,6 +1,7 @@
 import { View, Text, Animated, ScrollView, TouchableOpacity, Platform, Image, ImageStyle, FlatList } from 'react-native'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { CommonActions, useNavigation } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next';
 import { storageGetItem, storageGetList, storageSaveAndOverwrite } from '../data/storageFunc'
 import { NavigationButtonRowWithColorScheme, ProgressRowWithColorScheme, RoundBtn, SelectorInput, SSBarWithSaveArea, SSBarWithSaveAreaWithColorScheme, TopBarWithThingInMiddleAllCustomable, TopBarWithThingInMiddleAllCustomableWithColorScheme, ViewCol, ViewColBetweenCenter, ViewColCenter, ViewColStartBetween, ViewRow, ViewRowBetweenCenter } from '../assets/Class'
 import * as SVG from '../assets/svgXml'
@@ -16,6 +17,7 @@ import { useInitializeFlashCardData, useSaveFlashCardDataBeforeLeave } from '../
 export default function FlashCard({ route }: any) {
     // Sentinal variable <<<<<<<<<<<<<<
     const navigation = useNavigation()
+    const { t } = useTranslation();
     const [CurrentCache, dispatch] = useContext(RootContext)
     let COLORSCHEME = CurrentCache.colorScheme
 
@@ -40,7 +42,7 @@ export default function FlashCard({ route }: any) {
                 rightItemIcon={SVG.bunnybookmark(vw(6), vw(6), COLORSCHEME.gray1)}
                 centerChildren={
                     <ViewColCenter>
-                        <CTEXT.NGT_Inter_DispMd_SemiBold children={`Flash Card`} />
+                        <CTEXT.NGT_Inter_DispMd_SemiBold children={t('flashcard.title')} />
                         <CTEXT.NGT_Inter_BodyLg_SemiBold children={subTitle} color={COLORSCHEME.gray1} />
                     </ViewColCenter>
                 }
@@ -55,7 +57,7 @@ export default function FlashCard({ route }: any) {
                     onPress={() => { setIsFront(!isFront) }}
                     style={[styles.flex1, styles.w100, { borderWidth: vw(2), borderColor: COLORSCHEME.brandMain, borderRadius: vw(5), backgroundColor: COLORSCHEME.backgroundFade }]}>
                     <View style={[styles.alignSelfCenter, styles.paddingH3vw, styles.paddingBottom2vw, { backgroundColor: COLORSCHEME.brandMain, borderBottomRightRadius: vw(2), borderBottomLeftRadius: vw(2) }]}>
-                        <CTEXT.NGT_Inter_HeaderLg_SemiBold color={COLORSCHEME.background} children={isFront ? 'Mặt trước' : 'Mặt sau'} />
+                        <CTEXT.NGT_Inter_HeaderLg_SemiBold color={COLORSCHEME.background} children={isFront ? t('flashcard.front') : t('flashcard.back')} />
                     </View>
                     <ViewColCenter style={[styles.flex1]}>
                         {
@@ -83,7 +85,7 @@ export default function FlashCard({ route }: any) {
                     setIsFront={setIsFront}
                     navigation={navigation}
                     LENGTH={routeParamsItem?.length || 1}
-                    displayType='Thẻ'
+                    displayType={t('flashcard.card')}
                 />
             </ViewColBetweenCenter>
         </SSBarWithSaveAreaWithColorScheme>

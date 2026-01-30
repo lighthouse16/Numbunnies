@@ -1,4 +1,4 @@
-package com.hongminhhaidang
+package com.numbunnies.app
 
 import android.app.Application
 import com.facebook.react.PackageList

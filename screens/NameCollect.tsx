@@ -2,6 +2,7 @@ import { View, Text, Alert, Image, ImageStyle } from 'react-native'
 import React, { useContext } from 'react'
 import { BoardingInput, LowBtn, RoundBtn, SSBarWithSaveArea, SSBarWithSaveAreaWithColorScheme, TopBarWithThingInMiddleAllCustomable, TopBarWithThingInMiddleAllCustomableWithColorScheme, ViewCol, ViewColBetweenCenter, ViewColCenter } from '../assets/Class'
 import { useNavigation } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next';
 import styles, { vw } from '../assets/stylesheet'
 import * as SVG from '../assets/svgXml'
 import { NGHIASTYLE } from '../assets/componentStyleSheet'
@@ -12,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function NameCollect() {
     const navigation = useNavigation()
+    const { t } = useTranslation();
     const [CurrentCache, dispatch] = useContext(RootContext)
     const [name, setName] = React.useState<string>('')
     const [firstClick, setFirstClick] = React.useState<boolean>(false)
@@ -30,12 +32,12 @@ export default function NameCollect() {
 
                         <ViewCol style={[styles.padding6vw, styles.justifyContentSpaceBetween, styles.flex1]}>
                             <View>
-                                <NGT_Inter_DispLg_Reg color={COLOR.textBrand} children='Trước khi bắt đầu,' />
-                                <NGT_Inter_DispLg_Reg color={COLOR.textBrand} children='hãy giới thiệu bản thân bạn' />
+                                <NGT_Inter_DispLg_Reg color={COLOR.textBrand} children={t('onboarding.beforeStart')} />
+                                <NGT_Inter_DispLg_Reg color={COLOR.textBrand} children={t('onboarding.introduceYourself')} />
                             </View>
                             <BoardingInput
-                                title='Tên bạn là gì'
-                                placeholder='Tên của bạn'
+                                title={t('onboarding.nameQuestion')}
+                                placeholder={t('onboarding.namePlaceholder')}
                                 value={name}
                                 onChgText={(value) => { setName(value as string) }}
                                 textClass={NGT_Inter_DispLg_SemiBold}
@@ -45,7 +47,7 @@ export default function NameCollect() {
                                 passiveColor={COLOR.text}
                             />
                             <LowBtn
-                                title='Tiếp tục'
+                                title={t('onboarding.continue')}
                                 onPress={() => {
                                     storageSaveUser({
                                         name: name,
@@ -55,7 +57,7 @@ export default function NameCollect() {
                                             dispatch(currentSetUser({ name: name, lang: 'vi-VN' }))
                                             navigation.navigate('BottomTab' as never)
                                         } else {
-                                            Alert.alert('Có lỗi xảy ra', 'Vui lòng thử lại')
+                                            Alert.alert(t('onboarding.error'), t('onboarding.tryAgain'))
                                         }
                                     })
                                 }}
@@ -69,8 +71,8 @@ export default function NameCollect() {
                     <>
                         <ViewColCenter style={[styles.flex1, styles.w100, styles.positionRelative]}>
                             <Image source={require('../assets/photos/onboard.png')} resizeMode='contain' resizeMethod='resize' style={[styles.w100vw, styles.h60vw] as ImageStyle} />
-                            <Text style={[styles.textCenter, { color: COLOR.textBrand, fontSize: vw(8), fontFamily: 'Inter-SemiBold', fontWeight: 600 }]}>Numbunnies</Text>
-                            <LowBtn CustomStyle={[styles.positionAbsolute, { bottom: inset.bottom || vw(4) }]} title='Bắt đầu' onPress={() => { setFirstClick(true) }} bgColor={COLOR.brandMain} fontColor='white' FontElement={NGT_Inter_DispMd_SemiBold} />
+                            <Text style={[styles.textCenter, { color: COLOR.textBrand, fontSize: vw(8), fontFamily: 'Inter-SemiBold', fontWeight: 600 }]}>{t('app.name')}</Text>
+                            <LowBtn CustomStyle={[styles.positionAbsolute, { bottom: inset.bottom || vw(4) }]} title={t('onboarding.start')} onPress={() => { setFirstClick(true) }} bgColor={COLOR.brandMain} fontColor='white' FontElement={NGT_Inter_DispMd_SemiBold} />
                         </ViewColCenter>
                     </>
             }

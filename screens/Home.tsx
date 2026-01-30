@@ -1,6 +1,7 @@
 import { View, Text, Animated, ScrollView, TouchableOpacity, Platform, Image, ImageStyle, FlatList } from 'react-native';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { storageGetItem, storageGetList } from '../data/storageFunc';
 import styles, { vh, vw } from '../assets/stylesheet';
 import clrStyle, { componentStyleList, NGHIASTYLE } from '../assets/componentStyleSheet';
@@ -14,6 +15,7 @@ import { fetchInitialData, fetchLastTouchData, getInitialCardTitleList, marginBo
 
 export default function Home() {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   const [CurrentCache, dispatch] = useContext(RootContext);
   const COLORSCHEME = CurrentCache.colorScheme;
 
@@ -23,7 +25,7 @@ export default function Home() {
   const [lastTouchItem, setLastTouchItem] = useState<{ id: string, type: string }>({ id: '', type: '' });
   const [lastTouchData, setLastTouchData] = useState<{ id: string, navigateTo: string, process: number, length: number, title: string, data: CardTitleFormat | any }>();
 
-  const CATEGORY_LIST = ['Tất cả', 'Mới', 'Chưa hoàn thành', 'Đã hoàn thành'];
+  const CATEGORY_LIST = [t('home.categories.all'), t('home.categories.new'), t('home.categories.incomplete'), t('home.categories.completed')];
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -63,12 +65,12 @@ export default function Home() {
             color={NGHIASTYLE.NghiaBrand600 as string}
           />
           <CLASS.ViewCol style={[styles.flex1]}>
-            <CTEXT.NGT_Inter_BodyMd_Reg>{(lastTouchData?.process || 0)}/{(lastTouchData?.length || 1)} Hoàn thành</CTEXT.NGT_Inter_BodyMd_Reg>
+            <CTEXT.NGT_Inter_BodyMd_Reg>{(lastTouchData?.process || 0)}/{(lastTouchData?.length || 1)} {t('home.completed')}</CTEXT.NGT_Inter_BodyMd_Reg>
             <CTEXT.NGT_Inter_BodyLg_SemiBold>{lastTouchData?.title}</CTEXT.NGT_Inter_BodyLg_SemiBold>
           </CLASS.ViewCol>
         </CLASS.ViewRow>
         <CLASS.RoundBtn
-          title='Hoàn thành ngay'
+          title={t('home.completeNow')}
           onPress={() => navigation.navigate(lastTouchData?.navigateTo, { item: lastTouchData?.data, current: lastTouchData?.process - 1 })}
           textClass={CTEXT.NGT_Inter_BodyMd_SemiBold}
           textColor={COLORSCHEME.background as string}
@@ -82,7 +84,7 @@ export default function Home() {
 
   const RenderLibChooseSection = useMemo(() => (
     <CLASS.ViewCol style={[styles.positionSticky, styles.top0, styles.gap4vw]}>
-      <CTEXT.NGT_Inter_DispMd_SemiBold>Flash card của bạn</CTEXT.NGT_Inter_DispMd_SemiBold>
+      <CTEXT.NGT_Inter_DispMd_SemiBold>{t('home.flashcardsTitle')}</CTEXT.NGT_Inter_DispMd_SemiBold>
       <FlatList
         scrollEnabled={false}
         style={[styles.w100, componentStyleList.roundBorderGray200 as any, styles.padding1vw]}
@@ -94,8 +96,8 @@ export default function Home() {
             style={[styles.paddingV2vw, styles.paddingH4vw, styles.flex1, styles.borderRadius2vw, { backgroundColor: item === libGradeSelected ? COLORSCHEME.brandMain : COLORSCHEME.background }]}
           >
             {item === libGradeSelected ?
-              <CTEXT.NGT_Inter_HeaderMd_SemiBold color={COLORSCHEME.background as string}>Lớp {item}</CTEXT.NGT_Inter_HeaderMd_SemiBold>
-              : <CTEXT.NGT_Inter_HeaderMd_Reg color={NGHIASTYLE.NghiaGray500 as string}>Lớp {item}</CTEXT.NGT_Inter_HeaderMd_Reg>
+              <CTEXT.NGT_Inter_HeaderMd_SemiBold color={COLORSCHEME.background as string}>{t('home.grade')} {item}</CTEXT.NGT_Inter_HeaderMd_SemiBold>
+              : <CTEXT.NGT_Inter_HeaderMd_Reg color={NGHIASTYLE.NghiaGray500 as string}>{t('home.grade')} {item}</CTEXT.NGT_Inter_HeaderMd_Reg>
             }
           </TouchableOpacity>
         )}
@@ -106,7 +108,7 @@ export default function Home() {
   return (
     <CLASS.SSBarWithSaveAreaWithColorScheme>
       <CLASS.TopBarWithThingInMiddleAllCustomableWithColorScheme
-        leftItem={<CTEXT.NGT_Inter_DispMd_SemiBold>Numbunnies</CTEXT.NGT_Inter_DispMd_SemiBold>}
+        leftItem={<CTEXT.NGT_Inter_DispMd_SemiBold>{t('app.name')}</CTEXT.NGT_Inter_DispMd_SemiBold>}
         rightItemFnc={() => { }}
         rightItemIcon={SVG.optionIcon(vw(6), vw(6), COLORSCHEME.text)}
         style={{
@@ -124,13 +126,13 @@ export default function Home() {
             filterFnc={async (item: string, sourceData: CardTitleFormat[]): Promise<any[] | false> => {
               const filterByStatus = (status: number) => sourceData.filter(card => card.status === status);
               switch (item) {
-                case 'Mới':
+                case t('home.categories.new'):
                   return filterByStatus(0);
-                case 'Chưa hoàn thành':
+                case t('home.categories.incomplete'):
                   return filterByStatus(1);
-                case 'Đã hoàn thành':
+                case t('home.categories.completed'):
                   return filterByStatus(2);
-                case 'Tất cả':
+                case t('home.categories.all'):
                   return sourceData;
                 default:
                   return [];
@@ -139,11 +141,11 @@ export default function Home() {
             selfRunFilterFnc
             renderFnc={(item: CardTitleFormat[]) => (
               item.length > 0 ? <CLASS.CardTitleRenderWithColorScheme data={item} onPressFnc={(par: CardTitleFormat) => navigation.navigate('FlashCard' as never, { item: par })} />
-                : <CTEXT.NGT_Inter_HeaderMd_SemiBold>Không có thẻ nào phù hợp</CTEXT.NGT_Inter_HeaderMd_SemiBold>
+                : <CTEXT.NGT_Inter_HeaderMd_SemiBold>{t('home.noCards')}</CTEXT.NGT_Inter_HeaderMd_SemiBold>
             )}
           />
         ) : (
-          <CTEXT.NGT_Inter_HeaderMd_SemiBold>Tải dữ liệu lỗi hoặc không có dữ liệu</CTEXT.NGT_Inter_HeaderMd_SemiBold>
+          <CTEXT.NGT_Inter_HeaderMd_SemiBold>{t('home.noData')}</CTEXT.NGT_Inter_HeaderMd_SemiBold>
         )}
         {marginBottomForScrollView()}
       </ScrollView>

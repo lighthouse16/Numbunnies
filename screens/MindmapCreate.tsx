@@ -109,13 +109,13 @@ export default function MindmapCreate({ route }: any) {
                 <View
                     style={[styles.positionRelative, styles.flex1, styles.paddingTop4vw]}>
                     <View style={[styles.positionAbsolute, styles.alignSelfCenter, styles.padding1vw, { backgroundColor: COLORSCHEME.background, left: vw(8), top: vw(0.5), zIndex: 1 }]}>
-                        <CTEXT.NGT_Inter_BodyLg_Med>Nhánh {(index || 0) + 1}</CTEXT.NGT_Inter_BodyLg_Med>
+                        <CTEXT.NGT_Inter_BodyLg_Med>Branch {(index || 0) + 1}</CTEXT.NGT_Inter_BodyLg_Med>
                     </View>
                     <ViewRowCenter>
                         <TextInput
                             editable={screenState == 'view' ? false : true}
                             onLayout={onLayout}
-                            placeholder="Nhập tại đây"
+                            placeholder="Enter here"
                             value={mindMapData.data.content[index || 0]}
                             multiline
                             onChangeText={(value) => {
@@ -172,19 +172,19 @@ export default function MindmapCreate({ route }: any) {
                         <ViewRow style={[styles.gap2vw]}>
                             {mindMapData.label.type.length ?
                                 <CardCateRenderWithColorScheme type={mindMapData.label.type} />
-                                : <CTEXT.NGT_Inter_BodyLg_Reg children='Chưa phân loại thẻ' key={0} color={COLORSCHEME.gray1} />
+                                : <CTEXT.NGT_Inter_BodyLg_Reg children='Uncategorized' key={0} color={COLORSCHEME.gray1} />
                             }
                         </ViewRow>
                     </> :
                     <>
-                        <CTEXT.NGT_Inter_HeaderMd_SemiBold children='Tiêu đề' />
+                        <CTEXT.NGT_Inter_HeaderMd_SemiBold children='Title' />
                         <TextInput
-                            placeholder='Nhập tại đây'
+                            placeholder='Enter here'
                             value={mindMapData.label.title}
                             onChangeText={(value) => dispatchMm({ type: 'SET_TITLE', payload: value })}
                             style={[styles.flex1, styles.padding2vw, styles.borderRadius2vw, styles.border1, { color: COLORSCHEME.text, borderColor: COLORSCHEME.text }]}
                         />
-                        <CTEXT.NGT_Inter_HeaderMd_SemiBold children='Phân loại thẻ' />
+                        <CTEXT.NGT_Inter_HeaderMd_SemiBold children='Categorize Card' />
                         <FlatList
                             data={[0, 1, 2, 3]}
                             horizontal
